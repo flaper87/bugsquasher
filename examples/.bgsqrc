@@ -1,0 +1,40 @@
+{
+    "section": "redhat",
+
+    "redhat": {
+        "vm": "rhel64",
+        "prefix": "rh-",
+        "user": "BZ_USERNAME",
+        "password": "BZ_PASSWORD",
+        "hypervisor": "vagrant",
+        "work_dir": "~/workspace",
+        "bz_url": "https://bugzilla.redhat.com/xmlrpc.cgi",
+
+        "pyvenv_args": [
+            "--distribute",
+            "--no-site-packages",
+            "--python=python2.7",
+            ".venv"
+        ],
+
+        "take_hooks": [
+            "egg:bugsquasher#vagrant",
+            "egg:bugsquasher#bugzilla",
+            "egg:bugsquasher#pyvenv"
+        ],
+        "destroy_hooks": [
+            "egg:bugsquasher#vagrant"
+        ],
+        "show_hooks": [
+            "egg:bugsquasher#vagrant",
+            "egg:bugsquasher#bugzilla"
+        ],
+        "list_hooks": [
+            "egg:bugsquasher#vagrant",
+            "egg:bugsquasher#bugzilla"
+        ],
+        "update_hooks": [
+            "egg:bugsquasher#bugzilla"
+        ]
+    }
+}
