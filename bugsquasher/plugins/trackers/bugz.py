@@ -72,7 +72,7 @@ class BugzillaBackend(object):
             with open(".bugzilla.json", "rb") as f:
                 summary = loads(f.read())
 
-            print colored("Bug Title:", 'green') + summary["summary"]
+            print colored("Bug Title: ", 'green') + summary["summary"]
             print "\tStatus: %s" % summary["status"]
             print "\t%s comments" % len(summary["comments"])
 

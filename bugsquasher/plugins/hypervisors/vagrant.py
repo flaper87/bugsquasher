@@ -106,7 +106,7 @@ class Vagrant(object):
         if os.path.exists("Vagrantfile"):
             msg = cls().status()
 
-        print colored("VM Status: ", 'green'), msg
+        print colored("VM Status:", 'green'), msg
 
     on_show = on_list = _get_status
 
