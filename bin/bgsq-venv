@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# Portable shell scripting is hard, let's go shopping.
+#
+# People insist on aliasing commands like 'cd', either with a real
+# alias or even a shell function. Under bash and zsh, "builtin" forces
+# the use of a command that is part of the shell itself instead of an
+# alias, function, or external command, while "command" does something
+# similar but allows external commands. Under ksh "builtin" registers
+# a new command from a shared library, but "command" will pick up
+# existing builtin commands. We need to use a builtin for cd because
+# we are trying to change the state of the current shell, so we use
+# "builtin" for bash and zsh but "command" under ksh.
+#
+# Name wasn't changed on purpose, next function was taken from virtualenvwrapper.
+function virtualenvwrapper_cd {
+    if [ -n "$BASH" ]
+    then
+        builtin \cd "$@"
+    elif [ -n "$ZSH_VERSION" ]
+    then
+        builtin \cd "$@"
+    else
+        command \cd "$@"
+    fi
+}
+
+function activate() {
+    echo $1
+    $(bgsq config --shell)
+
+    bug_dir=$BGSQ_WORK_DIR/$BGSQ_PREFIX$1
+    echo $bug_dir
+    virtualenvwrapper_cd $bug_dir
+
+    which workon 2> /dev/null
+
+    if [[ $? -eq 0 ]]; then
+        workon $PREFIX-$1
+    fi
+}
+
+case "$1" in
+    activate)
+        shift
+        activate $*;;
+    *)
+        exit 1
+esac

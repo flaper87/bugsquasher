@@ -32,7 +32,6 @@ import os
 import subprocess
 import sys
 
-from bugsquasher.plugins.hypervisors.base import Hypervisor
 
 def which(program):
     '''
@@ -59,7 +58,7 @@ def which(program):
 VAGRANT_EXE = which('vagrant')
 
 
-class Vagrant(Hypervisor):
+class Vagrant(object):
     '''
     Object to up (launch) and destroy (terminate) vagrant virtual machines,
     to check the status of the machine and to report on the configuration
