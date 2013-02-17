@@ -16,6 +16,8 @@ class BaseApp(object):
                             help='Section to use')
         parser.add_argument('-e', '--exclude', default="",
                             help='Exclude plugins (Comma separated)')
+        parser.add_argument('-i', '--include', default="",
+                            help='Include plugins (Comma separated)')
         return parser
 
     @classmethod
@@ -37,6 +39,16 @@ class BaseApp(object):
             if hook in conf.args.exclude.split(","):
                 continue
             getattr(cls, "_%s" % hook_type)(hook, config=config, **kwargs)
+
+        if conf.args.include:
+            for hook in conf.args.include.split(","):
+                if not hasattr(cls, "_%s" % hook.split(":")[0]):
+                    hook_type = "egg"
+                    hook = "bugsquasher#" + hook
+                else:
+                    hook_type, hook = hook.split(":")
+
+                getattr(cls, "_%s" % hook_type)(hook, config=config, **kwargs)
 
     @classmethod
     def _egg(cls, hook, config={}, **kwargs):

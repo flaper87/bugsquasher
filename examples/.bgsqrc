@@ -4,11 +4,17 @@
     "redhat": {
         "vm": "rhel64",
         "prefix": "rh-",
-        "user": "BZ_USERNAME",
-        "password": "BZ_PASSWORD",
         "hypervisor": "vagrant",
         "work_dir": "~/workspace",
+
+        "bz_user": "BZ_USERNAME",
+        "bz_password": "BZ_PASSWORD",
         "bz_url": "https://bugzilla.redhat.com/xmlrpc.cgi",
+
+        "bz_query": {
+            "product": "blah, blah, blah",
+            "assigned_to": "me@whatever.com"
+        },
 
         "pyvenv_args": [
             "--distribute",

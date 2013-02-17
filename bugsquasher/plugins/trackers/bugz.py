@@ -1,5 +1,6 @@
 
 import os
+import prettytable
 from termcolor import colored
 from bugsquasher.cfg import conf
 from bugzilla import RHBugzilla, Bugzilla
@@ -21,12 +22,12 @@ class BugzillaBackend(object):
             self.bugzilla = Bugzilla(url=self.url)
 
     def ensure_login(func):
-        def wrapper(self):
-            user = self.config.get('user')
-            password = self.config.get('password')
+        def wrapper(self, *args, **kwargs):
+            user = self.config.get('bz_user')
+            password = self.config.get('bz_password')
             if (user and password) and not self.bugzilla.logged_in:
                 self.bugzilla.login(user, password)
-            return func(self)
+            return func(self, *args, **kwargs)
         return wrapper
 
     @property
@@ -35,6 +36,41 @@ class BugzillaBackend(object):
         if not self._bug:
             self._bug = self.bugzilla.getbug(self.id)
         return self._bug
+
+    @ensure_login
+    def search(self, query):
+        q = self.config.get("bz_query", {}).copy()
+        q.update(query)
+
+        for k, v in q.items():
+            if isinstance(v, basestring) and "," in v:
+                q[k] = v.split(",")
+        return self.bugzilla.query(q)
+
+    @classmethod
+    def on_search(cls, config, query, **kwargs):
+        bugz = cls(None, config)
+        results = bugz.search(query)
+
+        headers = [
+            'ID',
+            'Component',
+            'Status',
+            'Summary',
+            'Assignee']
+        table = prettytable.PrettyTable(headers, header=False, border=False)
+
+        for rst in results:
+            bug = rst.__dict__
+            table.add_row([
+                        bug["id"],
+                        colored(bug["component"], "green"),
+                        colored(bug["status"], "red"),
+                        bug["summary"],
+                        bug["assigned_to"],
+                    ])
+
+        print table.get_string()
 
     @classmethod
     def on_take(cls, config, **kwargs):

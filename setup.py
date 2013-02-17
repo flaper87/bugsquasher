@@ -28,13 +28,14 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     scripts=[
-        "bin/bgsq",
-        "bin/bgsq.py",
-        "bin/bgsq-venv"
+        "bin/bugsq",
+        "bin/bugsq.py",
+        "bin/bugsq-venv"
     ],
     entry_points={
         'bugsquasher.commands': [
             'list=bugsquasher.commands.ls:LsBugs',
+            'search=bugsquasher.commands.search:Search',
             'show=bugsquasher.commands.show:ShowBug',
             'take=bugsquasher.commands.take:TakeBug',
             'config=bugsquasher.commands.config:Config',
