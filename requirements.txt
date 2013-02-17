@@ -1,2 +1,3 @@
+prettytable==0.7
 termcolor==1.1.0
 python-bugzilla>=0.7.0
