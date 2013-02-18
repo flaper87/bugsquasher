@@ -20,7 +20,7 @@ class LsBugs(BaseApp):
 
         config = conf.config.get(section)
 
-        work_dir = config.get('work_dir')
+        work_dir = os.path.expanduser(config.get('work_dir'))
         prefix = config.get('prefix', '')
 
         assert os.path.exists(work_dir), "Work dir %s does not exist" % work_dir
