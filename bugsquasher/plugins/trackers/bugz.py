@@ -116,9 +116,9 @@ class BugzillaBackend(object):
             if hasattr(conf.args, "verbose") and conf.args.verbose:
                 for idx, comment in enumerate(summary["comments"]):
                     print colored("\tComment: %s" % (idx + 1), 'yellow')
-                    header = "\tAuthor: %s, Private: %s, Date %s" % (comment["author"],
-                                                                  comment["is_private"],
-                                                                  comment["time"])
+                    header = "\tAuthor: %s, Private: %s, Date %s" % \
+                             (comment["author"], comment["is_private"],
+                              comment["time"])
                     print colored(header, 'yellow')
                     print "\t%s" % comment["text"].replace("\n", "\n\t")
                     print "\t"

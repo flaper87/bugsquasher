@@ -2,6 +2,7 @@
 
 from bugsquasher.commands.base import BaseBug
 
+
 class ShowBug(BaseBug):
 
     name = 'show'

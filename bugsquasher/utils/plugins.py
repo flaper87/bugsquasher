@@ -1,5 +1,6 @@
 import pkg_resources
 
+
 def load_plugin(uri):
 
     if uri.startswith("egg:"):
@@ -11,7 +12,8 @@ def load_plugin(uri):
             dist = entry_str
             name = "sync"
 
-        return pkg_resources.load_entry_point(dist, "bugsquasher.plugins", name)
+        return pkg_resources.load_entry_point(dist, "bugsquasher.plugins",
+                                              name)
 
     components = uri.split('.')
     if len(components) == 1:

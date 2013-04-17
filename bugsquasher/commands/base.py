@@ -97,8 +97,10 @@ class BaseBug(BaseApp):
             bug = bug.lstrip(config.get('prefix', ''))
 
         base_work_dir = os.path.expanduser(config.get('work_dir'))
-        assert os.path.exists(base_work_dir), "Work dir %s does not exist" % base_work_dir
-        work_dir = os.path.join(base_work_dir, "%s%s" % (config.get('prefix'), bug))
+        assert os.path.exists(base_work_dir), "Work dir %s does not exist" % \
+                                              base_work_dir
+        work_dir = os.path.join(base_work_dir, "%s%s" %
+                                               (config.get('prefix'), bug))
 
         if not os.path.exists(work_dir):
             os.mkdir(work_dir)
