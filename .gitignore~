@@ -32,6 +32,3 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
-
-# Ninja Project
-.nja
