@@ -4,7 +4,7 @@ from functools import partial
 try:
     from xmlrpclib import DateTime
 except ImportError:
-    DateTime = ""
+    pass
 
 
 class JSONEncoder(json.JSONEncoder):

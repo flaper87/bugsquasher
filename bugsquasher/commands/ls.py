@@ -23,7 +23,8 @@ class LsBugs(BaseApp):
         work_dir = os.path.expanduser(config.get('work_dir'))
         prefix = config.get('prefix', '')
 
-        assert os.path.exists(work_dir), "Work dir %s does not exist" % work_dir
+        assert os.path.exists(work_dir), "Work dir %s does not exist" % \
+                                          work_dir
         for bug in os.listdir(work_dir):
             bug_dir = os.path.join(work_dir, bug)
             if not os.path.isdir(bug_dir) or not bug.startswith(prefix):

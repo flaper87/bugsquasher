@@ -36,7 +36,7 @@ import sys
 def which(program):
     '''
     Emulate unix 'which' command.
-    http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python/377028#377028
+    http://tinyurl.com/test-if-executable-exists
     '''
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
@@ -126,7 +126,8 @@ class Vagrant(object):
                     try:
                         box_path = self.BASE_BOXES[box_name]
                     except KeyError:
-                        print "Box not found in url list. Please specify the box path/url."
+                        print "Box not found in url list. Please specify \
+                               the box path/url."
                         sys.exit(1)
                 self.box_add(box_name, box_path)
             else:
@@ -141,9 +142,10 @@ class Vagrant(object):
         self._run_vagrant_command('up', vm_name, no_provision_arg)
         try:
             self.conf(vm_name=vm_name)  # cache configuration
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError as self._e:
             # in multi-VM environments, up() can be used to start all VMs,
             # however vm_name is required for conf() or ssh_config().
+            self._e = None
             pass
 
     def halt(self, vm_name=None):
@@ -198,7 +200,7 @@ class Vagrant(object):
         output = self._run_vagrant_command('status', vm_name)
         # sys.stderr.write('status {}: {}\n'.format(vm_name, output))
         statuses = {}
-        state = 1 # parsing state variable.
+        state = 1  # parsing state variable.
         # The format of output is expected to be a "Current VM states:" line
         # followed by a blank line, followed by one or more status lines,
         # followed by a blank line.
@@ -457,7 +459,8 @@ class Vagrant(object):
 
 class SandboxVagrant(Vagrant):
     '''
-    Support for sandbox mode using the Sahara gem (https://github.com/jedi4ever/sahara).
+    Support for sandbox mode using the
+    Sahara gem (https://github.com/jedi4ever/sahara).
     '''
 
     def _run_sandbox_command(self, *args):
