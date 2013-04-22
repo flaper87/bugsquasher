@@ -23,7 +23,7 @@ class BaseApp(object):
     @classmethod
     def main(cls):
         """
-        https://bugzilla.redhat.com/show_bug.cgi?id=894813
+        Called whenever a command is executed.
         """
         section = conf.args.section
         if not section:
@@ -34,13 +34,28 @@ class BaseApp(object):
 
     @classmethod
     def call_hooks(cls, config={}, **kwargs):
+        """
+        Called by main. This method calls hooks that were
+        configured in the config file or enabled in the cli.
+
+        It also excludes hooks specified in the cli using `-e`
+
+        NOTE: Hooks enabled using `-i` will be called after the
+        ones configured in the config file.
+
+        :params config: Dictionary containing section's configs.
+        :params kwargs: Any extra keyword that should be passed
+        to the final method.
+        """
+        excluded = conf.args.exclude.split(",")
         for hook in config.get("%s_hooks" % cls.name, []):
             hook_type, hook = hook.split(":")
-            if hook in conf.args.exclude.split(","):
+            if hook in excluded:
                 continue
             getattr(cls, "_%s" % hook_type)(hook, config=config, **kwargs)
 
         if conf.args.include:
+            # NOTE(flaper87): Call any hook specified in the command line.
             for hook in conf.args.include.split(","):
                 if not hasattr(cls, "_%s" % hook.split(":")[0]):
                     hook_type = "egg"
@@ -52,11 +67,27 @@ class BaseApp(object):
 
     @classmethod
     def _egg(cls, hook, config={}, **kwargs):
+        """
+        Loads an egg and calls the method that
+        should consume this command.
+
+        :params hook: Hook to load (egg)
+        :params config: Config dictionary.
+        :params kwargs: Any extra keyword to pass
+        to the final method.
+        """
         plugin = plugins.load_plugin("egg:%s" % hook)
         getattr(plugin, "on_%s" % cls.name)(config=config, **kwargs)
 
     @classmethod
     def _cmd(cls, hook, config={}, **kwargs):
+        """
+        Executes the hook as a sub-command (assuming it
+        exists in the PATH)
+
+        :params hook: Hook to load (egg)
+        :params config: Config dictionary.
+        """
         misc.execute(hook, config=config)
 
 
@@ -74,6 +105,10 @@ class BaseBash(BaseApp):
 
 
 class BaseBug(BaseApp):
+    """
+    Base command class for bug related
+    commands.
+    """
 
     @classmethod
     def add_argument_parser(cls, subparsers):
@@ -84,7 +119,9 @@ class BaseBug(BaseApp):
     @classmethod
     def main(cls):
         """
-        https://bugzilla.redhat.com/show_bug.cgi?id=894813
+        This implementation makes sure a folder for
+        the given bug exists and cd'es it before executing
+        hooks chain.
         """
         section = conf.args.section
         if not section:
