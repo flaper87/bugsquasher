@@ -47,5 +47,13 @@ setup(
             'vagrant=bugsquasher.plugins.hypervisors.vagrant:Vagrant',
             'bugzilla=bugsquasher.plugins.trackers.bugz:BugzillaBackend',
         ],
+        "console_scripts": [
+            'bugsq-list = bugsquasher.cmd.ls:Cmd.main',
+            'bugsq-show = bugsquasher.cmd.show:Cmd.main',
+            'bugsq-take = bugsquasher.cmd.take:Cmd.main',
+            'bugsq-update = bugsquasher.cmd.update:Cmd.main',
+            'bugsq-search = bugsquasher.cmd.search:Cmd.main',
+            'bugsq-destroy = bugsquasher.cmd.destroy:Cmd.main',
+        ]
     },
 )

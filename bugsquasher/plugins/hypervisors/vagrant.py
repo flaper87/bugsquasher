@@ -91,16 +91,16 @@ class Vagrant(object):
         self._cached_conf = {}
 
     @classmethod
-    def on_take(cls, config, **kwargs):
+    def on_take(cls, config, section, **kwargs):
         cls().init(config.get("vm"))
 
     @classmethod
-    def on_destroy(cls, config, **kwargs):
+    def on_destroy(cls, config, section, **kwargs):
         if os.path.exists("Vagrantfile"):
             cls().destroy()
 
     @classmethod
-    def _get_status(cls, config, **kwargs):
+    def _get_status(cls, config, section, **kwargs):
         from termcolor import colored
         msg = "Not a vagrant environment"
         if os.path.exists("Vagrantfile"):

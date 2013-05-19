@@ -1,8 +1,6 @@
-
 import os
 import prettytable
 from termcolor import colored
-from bugsquasher.cfg import conf
 from bugzilla import RHBugzilla, Bugzilla
 from bugsquasher.utils.jsonutils import loads, dumps
 
@@ -48,8 +46,8 @@ class BugzillaBackend(object):
         return self.bugzilla.query(q)
 
     @classmethod
-    def on_search(cls, config, query, **kwargs):
-        bugz = cls(None, config)
+    def on_search(cls, config, section, query, **kwargs):
+        bugz = cls(None, section)
         results = bugz.search(query)
 
         headers = [
@@ -73,7 +71,7 @@ class BugzillaBackend(object):
         print table.get_string()
 
     @classmethod
-    def on_take(cls, config, **kwargs):
+    def on_take(cls, config, section, **kwargs):
         bugz = cls(kwargs.get("bug"), config)
         bug = bugz.bug.__dict__
 
@@ -82,7 +80,7 @@ class BugzillaBackend(object):
                 f.write(dumps(bug, ensure_ascii=True, indent=4))
 
     @classmethod
-    def on_update(cls, config, **kwargs):
+    def on_update(cls, config, section, **kwargs):
         def update_bug(bug):
             bugz = cls(bug, config)
             bug = bugz.bug.__dict__
@@ -103,7 +101,7 @@ class BugzillaBackend(object):
             update_bug(sub.lstrip(config.get("prefix", "")))
 
     @classmethod
-    def on_show(cls, config, **kwargs):
+    def on_show(cls, config, section, **kwargs):
         if os.path.exists(".bugzilla.json"):
             with open(".bugzilla.json", "rb") as f:
                 summary = loads(f.read())
@@ -112,8 +110,7 @@ class BugzillaBackend(object):
             print "\tStatus: %s" % summary["status"]
             print "\t%s comments" % len(summary["comments"])
 
-            # Check if conf.args has attr so we can reuse it for listing
-            if hasattr(conf.args, "verbose") and conf.args.verbose:
+            if config.verbose:
                 for idx, comment in enumerate(summary["comments"]):
                     print colored("\tComment: %s" % (idx + 1), 'yellow')
                     header = "\tAuthor: %s, Private: %s, Date %s" % \
