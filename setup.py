@@ -29,23 +29,14 @@ setup(
     ],
     scripts=[
         "bin/bugsq",
-        "bin/bugsq.py",
         "bin/bugsq-venv"
     ],
     entry_points={
-        'bugsquasher.commands': [
-            'list=bugsquasher.commands.ls:LsBugs',
-            'search=bugsquasher.commands.search:Search',
-            'show=bugsquasher.commands.show:ShowBug',
-            'take=bugsquasher.commands.take:TakeBug',
-            'config=bugsquasher.commands.config:Config',
-            'update=bugsquasher.commands.update:UpdateBugs',
-            'destroy=bugsquasher.commands.destroy:DestroyBug',
-        ],
         'bugsquasher.plugins': [
             'pyvenv=bugsquasher.plugins.source.venv:VenvPlugin',
             'vagrant=bugsquasher.plugins.hypervisors.vagrant:Vagrant',
             'bugzilla=bugsquasher.plugins.trackers.bugz:BugzillaBackend',
+            'launchpad=bugsquasher.plugins.trackers.lp:LP',
         ],
         "console_scripts": [
             'bugsq-list = bugsquasher.cmd.ls:Cmd.main',

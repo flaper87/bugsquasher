@@ -82,12 +82,10 @@ class BaseBug(BaseApp):
                                            required=True,
                                            positional=True))
 
-    @classmethod
-    def execute(cls, config, section):
+    @staticmethod
+    def get_bug_dir(config, section):
         """
-        This implementation makes sure a folder for
-        the given bug exists and cd'es it before executing
-        hooks chain.
+        Returns the bug directory
         """
         bug = config.bug
         if bug.startswith(section.get('prefix', '')):
@@ -96,10 +94,18 @@ class BaseBug(BaseApp):
         base_work_dir = os.path.expanduser(section.get('work_dir'))
         assert os.path.exists(base_work_dir), "Work dir %s does not exist" % \
                                               base_work_dir
-        work_dir = os.path.join(base_work_dir, "%s%s" %
-                                               (section.get('prefix'), bug))
+        return os.path.join(base_work_dir, "%s%s" %
+                            (section.get('prefix'), bug))
 
+    @classmethod
+    def execute(cls, config, section):
+        """
+        This implementation makes sure a folder for
+        the given bug exists and cd'es it before executing
+        hooks chain.
+        """
+        work_dir = cls.get_bug_dir(config, section)
         if not os.path.exists(work_dir):
             os.mkdir(work_dir)
         os.chdir(work_dir)
-        cls.call_hooks(config, section, bug=bug)
+        cls.call_hooks(config, section, bug=config.bug)
