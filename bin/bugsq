@@ -8,4 +8,9 @@ if [[ $? -eq 0 ]]; then
     exit 0
 fi
 
-#bugsq.py $*
+if [[ $1 ]]; then
+    echo "Command not found: $1"
+fi
+
+COMMAND=`basename $0`
+echo "Usage: $COMMAND <command> [OPTIONS]"
