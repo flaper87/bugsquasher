@@ -72,7 +72,7 @@ class BugzillaBackend(object):
 
     @classmethod
     def on_take(cls, config, section, **kwargs):
-        bugz = cls(kwargs.get("bug"), config)
+        bugz = cls(kwargs.get("bug"), section)
         bug = bugz.bug.__dict__
 
         if bug:
@@ -82,7 +82,7 @@ class BugzillaBackend(object):
     @classmethod
     def on_update(cls, config, section, **kwargs):
         def update_bug(bug):
-            bugz = cls(bug, config)
+            bugz = cls(bug, section)
             bug = bugz.bug.__dict__
 
             if bug:
